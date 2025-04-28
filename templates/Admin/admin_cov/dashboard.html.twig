@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Covoiturage{% endblock %}
+
+{% block body %}
+<main id="main" class="main">
+    <section class="section dashboard">
+        <div class="dashboard-container">
+            <div class="header-section">
+                <div class="header-content">
+                    <h1>🚗 Admin Covoiturage</h1>
+                    <p>Gestion administrative des covoiturages</p>
+                </div>
+                <div class="header-actions">
+                    <a href="{{ path('app_covoiturage_new') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nouveau Covoiturage
+                    </a>
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <a href="{{ path('app_covoiturage_index') }}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <h3>Liste des Covoiturages</h3>
+                </a>
+                
+                <a href="{{ path('app_reservation_cov_index') }}" class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Réservations</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+    .admin-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .action-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        text-decoration: none;
+        color: var(--dark);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary);
+    }
+    
+    .action-icon {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+    
+    .action-card h3 {
+        margin: 0;
+        font-size: 1.25rem;
+    }
+</style>
+{% endblock %}

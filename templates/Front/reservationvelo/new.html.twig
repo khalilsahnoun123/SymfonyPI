@@ -1,0 +1,10 @@
+{% extends 'Front/userDashboard.html.twig' %}
+{% block title %}New Reservationvelo{% endblock %}
+
+{% block body %}
+    <h1>Create new Reservationvelo</h1>
+
+    {{ include('Front/reservationvelo/_form.html.twig') }}
+
+    <a href="{{ path('app_reservationvelo_index') }}">back to list</a>
+{% endblock %}

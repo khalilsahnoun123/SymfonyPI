@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nouvelle réservation #{{ reservation.reservation_id }}</title>
+    <style>
+        body { font-family: sans-serif; color: #333; }
+        h1 { background: #eee; padding: 10px; }
+        .detail { margin: 5px 0; }
+        .detail strong { display: inline-block; width: 150px; }
+    </style>
+</head>
+<body>
+    <h1>Nouvelle réservation #{{ reservation.reservation_id }}</h1>
+    <p class="detail"><strong>Date de voyage :</strong> {{ reservation.travel_date|date('d/m/Y') }}</p>
+    <p class="detail"><strong>Nombre de sièges :</strong> {{ reservation.number_of_seats }}</p>
+    <p class="detail"><strong>Catégorie de billet :</strong> {{ reservation.ticket_category }}</p>
+    <p class="detail"><strong>Statut :</strong> {{ reservation.status }}</p>
+    <p class="detail"><strong>Prix total :</strong> {{ reservation.total_price }} TND</p>
+    <p class="detail"><strong>Gare de départ :</strong> {{ reservation.depart_station.nom }}</p>
+    <p class="detail"><strong>Gare d'arrivée :</strong> {{ reservation.fin_station.nom }}</p>
+    <p class="detail"><strong>Statut de paiement :</strong> 
+        {% if reservation.paid %}
+            Payé
+        {% else %}
+            Non payé
+        {% endif %}
+    </p>
+</body>
+</html>

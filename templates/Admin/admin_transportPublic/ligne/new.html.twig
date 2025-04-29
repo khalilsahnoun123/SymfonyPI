@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Ligne{% endblock %}
+
+{% block body %}
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div><!-- End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle" href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">khalil sahnoun</span>
+          </a><!-- End Profile Image Icon -->
+        </li><!-- End Profile Nav -->
+      </ul>
+    </nav><!-- End Icons Navigation -->
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-heading">Pages</li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_stations_index') }}">
+          <i class="bi bi-house-door-fill"></i>
+          <span>Home</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_ligne_index') }}">
+          <i class="bi bi-collection-fill"></i>
+          <span>Gestion De Lignes</span>
+        </a>
+      </li>
+      <!-- Autres liens -->
+    </ul>
+  </aside><!-- End Sidebar -->
+
+  <main id="main" class="main">
+    <section class="section dashboard">
+      {{ form_start(form) }}
+      <div class="bike-type-form">
+        <div class="form-container">
+          <div class="form-header">
+            <h3><i class="bi bi-collection-fill"></i> Nouvelle Ligne</h3>
+            <p>Créez une nouvelle ligne de transport public</p>
+          </div>
+          <div class="form-body">
+            {{ form_row(form.name) }}
+            {{ form_row(form.prix_vip) }}
+            {{ form_row(form.prix_premium) }}
+            {{ form_row(form.prix_economique) }}
+            {{ form_row(form.region) }}
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="submit-btn">
+              <i class="bi bi-plus-lg"></i> Enregistrer
+            </button>
+          </div>
+        </div>
+      </div>
+      {{ form_end(form) }}
+
+      <style>
+        .bike-type-form {
+            --primary: #3a86ff;
+            --primary-light: #4cc9f0;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+            --dark: #1a1a2e;
+            --light: #f8f9ff;
+            --success: #06d6a0;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            max-width: 700px;
+            margin: 6rem auto 0 auto;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-container { background: white; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); overflow: hidden; }
+        .form-header { padding:1.75rem; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; }
+        .form-header h3 { margin:0 0 .25rem 0; font-size:1.5rem; display:flex; align-items:center; gap:.75rem; }
+        .form-header p { margin:0; opacity:.9; font-size:.95rem; }
+        .form-body { padding:2rem; }
+        .form-footer { padding:1.5rem; border-top:1px solid var(--light-gray); text-align:right; }
+        .submit-btn { background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; border:none; border-radius:8px; padding:.875rem 1.75rem; font-size:1rem; font-weight:600; cursor:pointer; transition:all .3s ease; display:inline-flex; align-items:center; gap:.75rem; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
+        .submit-btn:hover { transform:translateY(-2px); box-shadow:0 6px 12px rgba(58,134,255,0.2); }
+        @media (max-width:768px) {.form-body { padding:1.5rem; }}
+      </style>
+
+      <div class="action-buttons" style="margin-top:2rem; text-align:center;">
+        <a href="{{ path('app_ligne_index') }}" class="btn btn-back" style="background:white; color:#3a86ff; border:1px solid rgba(58, 134, 255,0.3);">
+          <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+      </div>
+    </section>
+  </main><!-- End #main -->
+{% endblock %}

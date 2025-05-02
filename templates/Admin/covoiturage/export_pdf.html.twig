@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        @page { margin: 1.5cm; }
+        body { 
+            font-family: 'Helvetica', Arial, sans-serif; 
+            font-size: 12pt;
+            line-height: 1.4;
+            color: #333;
+        }
+        h1 { 
+            color: #2c3e50;
+            text-align: center; 
+            margin-bottom: 0.3cm;
+            font-size: 18pt;
+            border-bottom: 2px solid #4361ee;
+            padding-bottom: 0.3cm;
+        }
+        .report-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5cm;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse;
+            margin-top: 0.5cm;
+            page-break-inside: avoid;
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th { 
+            background-color: #4361ee; 
+            color: white; 
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 10pt;
+        }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        .footer { 
+            margin-top: 1cm;
+            font-size: 9pt;
+            text-align: center;
+            color: #666;
+        }
+        .logo { 
+            text-align: center;
+            margin-bottom: 0.5cm;
+        }
+        .logo img { 
+            height: 1.5cm;
+            max-width: 5cm;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="{{ absolute_url(asset('img/logo.png')) }}" alt="Wasalni">
+    </div>
+    
+    <h1>{{ title }}</h1>
+    
+    <div class="report-info">
+        <div><strong>Date :</strong> {{ date|date('d/m/Y') }}</div>
+        <div><strong>Heure :</strong> {{ date|date('H:i') }}</div>
+        <div><strong>Total :</strong> {{ covoiturages|length }} covoiturages</div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Départ</th>
+                <th>Destination</th>
+                <th class="text-right">Prix (TND)</th>
+                <th>Places</th>
+                <th>Conducteur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for covoiturage in covoiturages %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ covoiturage.pointDeDepart }}</td>
+                    <td>{{ covoiturage.pointDeDestination }}</td>
+                    <td class="text-right">{{ covoiturage.prix|number_format(2, ',', ' ') }}</td>
+                    <td>{{ covoiturage.nbrPlace }}</td>
+                    <td>
+                        {% if covoiturage.user %}
+                            {% if covoiturage.user.getPrenom() is defined and covoiturage.user.getNom() is defined %}
+                                {{ covoiturage.user.getPrenom() }} {{ covoiturage.user.getNom() }}
+                            {% elseif covoiturage.user.getEmail() is defined %}
+                                {{ covoiturage.user.getEmail() }}
+                            {% else %}
+                                ID: {{ covoiturage.user.getId() }}
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucun covoiturage disponible</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        © {{ date|date('Y') }} Wasalni - Plateforme de covoiturage | 
+        Tél: +216 70 000 000 | Email: contact@wasalni.tn | 
+        Page <span class="pageNumber"></span>/<span class="totalPages"></span>
+    </div>
+
+    <script type="text/php">
+        if (isset($pdf)) {
+            $pdf->page_script('
+                $font = $fontMetrics->get_font("Helvetica");
+                $size = 9;
+                $pageText = "Page " . $PAGE_NUM . " of " . $PAGE_COUNT;
+                $pdf->text(520, 810, $pageText, $font, $size);
+            ');
+        }
+    </script>
+</body>
+</html>

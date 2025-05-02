@@ -1,0 +1,56 @@
+{# templates/front/cov/reservation.html.twig #}
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Réserver Covoiturage{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm hover-scale">
+        <div class="card-header text-white" style="background-color: var(--primary);">
+          Réservation : {{ covoiturage.point_de_depart }} → {{ covoiturage.point_de_destination }}
+        </div>
+        <div class="card-body">
+          {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+          {% endfor %}
+          {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+          {% endfor %}
+
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item"><strong>Départ :</strong> {{ covoiturage.point_de_depart }}</li>
+            <li class="list-group-item"><strong>Destination :</strong> {{ covoiturage.point_de_destination }}</li>
+            <li class="list-group-item"><strong>Places restantes :</strong> {{ covoiturage.nbr_place }}</li>
+            <li class="list-group-item"><strong>Prix :</strong> {{ covoiturage.prix }} TND</li>
+          </ul>
+
+          <form method="post" class="d-flex flex-column">
+            <div class="mb-3">
+              <label for="places" class="form-label">Nombre de places à réserver</label>
+              <input
+                type="number"
+                name="places"
+                id="places"
+                class="form-control"
+                min="1"
+                max="{{ covoiturage.nbr_place }}"
+                required
+              >
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-check me-2"></i>Confirmer
+              </button>
+              <a href="{{ path('app_covoiturage_public_list') }}" class="btn btn-secondary">
+                <i class="fas fa-times me-2"></i>Annuler
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

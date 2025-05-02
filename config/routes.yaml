@@ -3,3 +3,13 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+    # config/routes.yaml
+app_logout:
+    path: /logout
+    methods: [GET]
+api_covoiturage_export_pdf:
+    path: /api/covoiturages/export-pdf
+    methods: POST
+    controller: App\Controller\Api\CovoiturageApiController::exportPdf
+    defaults:
+        _format: json

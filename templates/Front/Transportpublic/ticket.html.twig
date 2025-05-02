@@ -1,0 +1,75 @@
+{# templates/Front/Transportpublic/ticket.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header img { max-height: 60px; }
+    .title { font-size: 1.8rem; margin-top: .5rem; color: #4361ee; }
+    .section { margin: 1.5rem 0; }
+    .section h4 { margin-bottom: .5rem; color: #4361ee; }
+    .info-table { width: 100%; border-collapse: collapse; }
+    .info-table td { padding: .5rem; vertical-align: top; }
+    .info-table tr + tr td { border-top: 1px solid #eee; }
+    .footer { margin-top: 3rem; text-align: center; font-size: .85rem; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="{{ asset('assets/img/logo.png') }}" alt="Wasalni">
+    <div class="title">Billet de Réservation</div>
+  </div>
+
+  <div class="section">
+    <h4>Détails de la réservation</h4>
+    <table class="info-table">
+      <tr>
+        <td><strong>Réservation #</strong></td>
+        <td>{{ reservation.getReservationId() }}</td>
+      </tr>
+      <tr>
+        <td><strong>Date de voyage</strong></td>
+        <td>{{ reservation.getTravelDate()|date('Y-m-d') }}</td>
+      </tr>
+      <tr>
+        <td><strong>Catégorie</strong></td>
+        <td>{{ reservation.getTicketCategory() }}</td>
+      </tr>
+      <tr>
+        <td><strong>Sièges</strong></td>
+        <td>{{ reservation.getNumberOfSeats() }}</td>
+      </tr>
+      <tr>
+        <td><strong>Ligne / Véhicule</strong></td>
+        <td>
+          {{ reservation.getDepartStation().getLigne().getName() }}
+          — {{ reservation.getVehicule().getType() }}
+        </td>
+      </tr>
+      <tr>
+        <td><strong>De → À</strong></td>
+        <td>{{ reservation.getDepartStation().getNom() }} → {{ reservation.getFinStation().getNom() }}</td>
+      </tr>
+      <tr>
+        <td><strong>Prix total</strong></td>
+        <td>{{ reservation.getTotalPrice() }} TND</td>
+        <td><strong>Status Payment</td>
+        <td><p class="detail"><strong> {% if reservation.paid %}
+            Payé
+        {% else %}
+            Non payé
+        {% endif %}</strong> 
+       
+    </p></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    Merci d’avoir choisi Wasalni !<br>
+    Pour toute question : support@wasalni.tn
+  </div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Reservation Details{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5 fw-bold text-primary">Reservation #{{ reservation.reservationId }}</h1>
+        <div>
+          <a href="{{ path('app_my_reservations') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+        <table class="table table-borderless mb-0">
+          <tbody>
+            <tr class="border-bottom">
+              <th class="py-3 text-muted" style="width:30%">Travel Date</th>
+              <td class="py-3">{{ reservation.travelDate|date('Y-m-d H:i') }}</td>
+            </tr>
+            <tr class="border-bottom">
+              <th class="py-3 text-muted">Vehicle</th>
+              <td class="py-3">{{ reservation.vehicule.type }}</td>
+            </tr>
+            <tr class="border-bottom">
+              <th class="py-3 text-muted">From → To</th>
+              <td class="py-3">
+                {{ reservation.departStation.nom }} → {{ reservation.finStation.nom }}
+              </td>
+            </tr>
+            <tr class="border-bottom">
+              <th class="py-3 text-muted">Category</th>
+              <td class="py-3">{{ reservation.ticketCategory }}</td>
+            </tr>
+            <tr class="border-bottom">
+              <th class="py-3 text-muted">Seats</th>
+              <td class="py-3">{{ reservation.numberOfSeats }}</td>
+            </tr>
+            <tr class="border-bottom">
+              <th class="py-3 text-muted">Total Price</th>
+              <td class="py-3 fw-bold text-primary">{{ reservation.totalPrice }} TND</td>
+            </tr>
+            <tr>
+              <th class="py-3 text-muted">Status</th>
+              <td class="py-3">
+                <span class="badge
+                  {{ reservation.status == 'CONFIRMED' ? 'bg-success'
+                     : reservation.status == 'PENDING'   ? 'bg-warning'
+                     : reservation.status == 'CANCELLED' ? 'bg-danger'
+                     : 'bg-secondary' }}">
+                  {{ reservation.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-end">
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .table-borderless th, .table-borderless td { padding: 12px 0; }
+  .badge { font-size: .8rem; padding: .35em .65em; }
+  .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important; }
+</style>
+{% endblock %}

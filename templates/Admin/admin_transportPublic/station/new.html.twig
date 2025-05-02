@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Station{% endblock %}
+
+{% block body %}
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div>
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle" href="#"><i class="bi bi-search"></i></a>
+        </li>
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">khalil sahnoun</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-heading">Pages</li>
+      <li class="nav-item"><a class="nav-link collapsed" href="{{ path('app_ligne_index') }}"><i class="bi bi-collection-fill"></i><span>Gestion De Lignes</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ path('app_station_index') }}"><i class="bi bi-pin-map-fill"></i><span>Gestion De Stations</span></a></li>
+      <!-- autres liens -->
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <section class="section dashboard">
+      <div class="form-container">
+        <div class="form-header">
+          <h1 class="form-title">➕ Nouvelle Station</h1>
+        </div>
+
+        {{ form_start(form, {'attr': {'class': 'form'}}) }}
+          <div class="form-group">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Nom de la station'}}) }}
+            {{ form_errors(form.nom) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.adresse) }}
+            {{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'placeholder': 'Adresse complète'}}) }}
+            {{ form_errors(form.adresse) }}
+          </div>
+
+          <div class="form-group">
+            {{ form_label(form.ligne) }}
+            {{ form_widget(form.ligne, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.ligne) }}
+          </div>
+
+          <div class="action-buttons">
+            <a href="{{ path('app_station_index') }}" class="btn btn-back">
+              <i class="bi bi-arrow-left"></i> Retour
+            </a>
+            <button type="submit" class="btn btn-save">
+              <i class="bi bi-plus-lg"></i> Enregistrer
+            </button>
+          </div>
+        {{ form_end(form) }}
+      </div>
+    </section>
+  </main>
+
+  <style>
+    .form-container { max-width: 700px; margin: 4rem auto; padding: 2rem; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); }
+    .form-header { margin-bottom: 2rem; }
+    .form-title { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #4361ee, #3a0ca3); -webkit-background-clip: text; color: transparent; }
+    .form-group { margin-bottom: 1.5rem; }
+    .action-buttons { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .btn { border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+    .btn-back { background: #fff; color: #4361ee; border: 1px solid #4361ee; }
+    .btn-save { background: linear-gradient(135deg, #4361ee, #3a0ca3); color: #fff; }
+    .btn:hover { opacity: 0.9; }
+  </style>
+{% endblock %}

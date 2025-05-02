@@ -1,0 +1,119 @@
+{# templates/Front/Transportpublic/my_reservations.html.twig #}
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}My Reservations{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">My Reservations</h1>
+        <a href="{{ path('app_reservation_new_step1') }}" class="btn btn-outline-primary">
+            <i class="fas fa-plus me-1"></i> New Reservation
+        </a>
+    </div>
+
+    {# Flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ label == 'success' ? 'success' : (label == 'error' ? 'danger' : label) }} alert-dismissible fade show" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Travel Date</th>
+                            <th>Status</th>
+                            <th>Seats</th>
+                            <th>Total Price</th>
+                            <th>Stataus Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if reservations is empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <div class="text-muted">No reservations found</div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        {% for res in reservations %}
+                        <tr>
+                            <td>{{ res.getTravelDate() ? res.getTravelDate()|date('Y-m-d') : '' }}</td>
+                            <td>
+                                <span class="badge
+                                    {{ res.getStatus() == 'CONFIRMED' ? 'bg-success'
+                                       : res.getStatus() == 'PENDING'   ? 'bg-warning'
+                                       : res.getStatus() == 'CANCELLED' ? 'bg-danger'
+                                       : 'bg-secondary' }}">
+                                    {{ res.getStatus() }}
+                                </span>
+                            </td>
+                            <td>{{ res.getNumberOfSeats() }}</td>
+                            <td>{{ res.getTotalPrice() }} TND</td>
+                            <td><p class="detail"><strong> {% if res.paid %}
+            Payé
+        {% else %}
+            Non payé
+        {% endif %}</strong> 
+       
+    </p></td>
+                            <td class="d-flex gap-1">
+                                {# View button (always) #}
+                                <a href="{{ path('app_my_reservation_show', {'id': res.getReservationId()}) }}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+
+                                {# Edit button – only if still PENDING #}
+                                {% if res.getStatus() == 'PENDING' %}
+                                    <a href="{{ path('app_my_reservation_edit', {'id': res.getReservationId()}) }}"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                {% endif %}
+
+                                {# Cancel button (POST) – only if still PENDING #}
+                                {% if res.getStatus() == 'PENDING' %}
+                                    <form method="post"
+                                          action="{{ path('app_my_reservation_cancel', {'id': res.getReservationId()}) }}"
+                                          onsubmit="return confirm('Annuler cette réservation ?');">
+                                        <input type="hidden"
+                                               name="_token"
+                                               value="{{ csrf_token('cancel' ~ res.getReservationId()) }}">
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                                             
+                                {% if res.getStatus() == 'CONFIRMED' %}
+                                <a href="{{ path('app_my_reservation_ticket', {id: res.getReservationId()}) }}"
+                                    class="btn btn-sm btn-outline-info" target="_blank">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+  .table-hover tbody tr:hover { background-color: rgba(0,0,0,0.02); }
+  .thead-light { background-color: #f8f9fa; }
+  .badge { font-size: .75rem; padding: .35em .65em; }
+</style>
+{% endblock %}

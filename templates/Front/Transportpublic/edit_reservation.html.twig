@@ -1,0 +1,64 @@
+{# templates/Front/Transportpublic/edit_reservation.html.twig #}
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Modifier la réservation{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Modifier Réservation #{{ reservation.getReservationId() }}</h1>
+    <a href="{{ path('app_my_reservations') }}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-1"></i> Retour
+    </a>
+  </div>
+
+  {{ form_start(form, {attr: {class: 'row g-3'}}) }}
+    <div class="col-md-4">
+      {{ form_label(form.travelDate) }}
+      {{ form_widget(form.travelDate, {
+            attr: {
+              class: 'form-control', 
+              min: "#{ 'now'|date('Y-m-d') }",
+            }
+          }) }}
+      {{ form_errors(form.travelDate) }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Ligne</label>
+      <input type="text" class="form-control" value="{{ reservation.getDepartStation().getLigne().getName() }}" readonly>
+    </div>
+   <div class="col-md-4">
+      {{ form_label(form.ticketCategory) }}
+      {{ form_widget(form.ticketCategory, {attr: {class: 'form-control', min: 1}}) }}
+      {{ form_errors(form.ticketCategory) }}
+    </div>
+
+    <div class="col-md-4">
+      {{ form_label(form.numberOfSeats) }}
+      {{ form_widget(form.numberOfSeats, {attr: {class: 'form-control', min: 1}}) }}
+      {{ form_errors(form.numberOfSeats) }}
+    </div>
+    <div class="col-md-4">
+      {{ form_label(form.departStation) }}
+      {{ form_widget(form.departStation, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.departStation) }}
+    </div>
+    <div class="col-md-4">
+      {{ form_label(form.finStation) }}
+      {{ form_widget(form.finStation, {attr: {class: 'form-control'}}) }}
+      {{ form_errors(form.finStation) }}
+    </div>
+
+    <div class="col-12 text-end">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save me-1"></i> Enregistrer
+      </button>
+    </div>
+  {{ form_end(form) }}
+</div>
+
+<style>
+  .form-label { font-weight: 600; }
+  .form-control:invalid { border-color: #dc3545; }
+</style>
+{% endblock %}

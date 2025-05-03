@@ -1,0 +1,25 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block body %}
+    <div class="login-form">
+        <div class="title">Reset Password</div>
+
+        {{ form_start(resetForm) }}
+        <div class="input-boxes">
+
+            <div class="input-box">
+                <i class="fas fa-lock"></i>
+                {{ form_widget(resetForm.plainPassword, {'attr': {'placeholder': 'Enter new password'}}) }}
+                {{ form_errors(resetForm.plainPassword) }}
+            </div>
+
+            <div class="button input-box">
+                <input type="submit" value="Reset Password">
+            </div>
+
+        </div>
+        {{ form_end(resetForm) }}
+    </div>
+{% endblock %}

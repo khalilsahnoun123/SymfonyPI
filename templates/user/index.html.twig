@@ -1,0 +1,260 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Index{% endblock %}
+
+{% block body %}
+<br>
+<br>
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>User List</h1>
+        <a href="{{ path('app_user_new') }}" class="btn btn-success">+ Create New</a>
+        <a href="{{ path('app_user_statistics') }}" class="btn btn-primary">📊 Statistiques</a>
+
+    </div>
+
+    <div class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search users...">
+                    <span class="input-group-text">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-sort-down"></i> Sort by
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="sortDropdown">
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="firstName" data-order="asc">Full Name (A-Z)</a></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="firstName" data-order="desc">Full Name (Z-A)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="email" data-order="asc">Email (A-Z)</a></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="email" data-order="desc">Email (Z-A)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="gouvernorat" data-order="asc">Governorate (A-Z)</a></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="gouvernorat" data-order="desc">Governorate (Z-A)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="status" data-order="asc">Status (A-Z)</a></li>
+                        <li><a class="dropdown-item sort-option" href="#" data-sort="status" data-order="desc">Status (Z-A)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle" id="usersTable">
+            <thead class="table-light">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Gov / Mun</th>
+                    <th>Address</th>
+                    <th>Roles</th>
+                    <th>Verified</th>
+                    <th>Status</th>
+                    <th>Blocked</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <!-- Table content will be loaded via AJAX -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    #searchInput {
+        border-right: none;
+    }
+    .input-group-text {
+        background-color: transparent;
+        border-left: none;
+    }
+    .input-group-text i {
+        color: #6c757d;
+    }
+    .table {
+        border: 1px solid #dee2e6;
+    }
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+    }
+    .dropdown-item.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .status-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 0.2rem;
+    }
+    .status-active {
+        background-color: #198754;
+        color: white;
+    }
+    .status-pending {
+        background-color: #ffc107;
+        color: black;
+    }
+    .block-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 0.2rem;
+    }
+    .blocked-yes {
+        background-color: #dc3545;
+        color: white;
+    }
+    .blocked-no {
+        background-color: #198754;
+        color: white;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentSort = {
+        field: 'firstName',
+        order: 'asc'
+    };
+    let searchTimeout;
+
+    function loadUsers(search = '', sortBy = currentSort.field, sortOrder = currentSort.order) {
+        const url = new URL('{{ path('app_user_search') }}', window.location.origin);
+        url.searchParams.append('search', search);
+        url.searchParams.append('sortBy', sortBy);
+        url.searchParams.append('sortOrder', sortOrder);
+
+        fetch(url)
+            .then(response => response.json())
+            .then(users => {
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="10" class="text-center">No users found.</td></tr>';
+                    return;
+                }
+
+                users.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.fullName}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone}</td>
+                        <td>
+                            ${user.gouvernorat}<br>
+                            <small class="text-muted">${user.municipalite}</small>
+                        </td>
+                        <td>${user.adresse}</td>
+                        <td>
+                            ${user.roles.map(role => `<span class="badge bg-secondary">${role}</span>`).join(' ')}
+                        </td>
+                        <td>
+                            ${user.status === 'active' ? 
+                                '<span class="badge bg-success">Yes</span>' : 
+                                '<span class="badge bg-danger">No</span>'}
+                        </td>
+                        <td>
+                            ${user.status === 'active' ? 
+                                `<button class="btn btn-sm status-btn status-active" onclick="updateStatus('${user.actions.deactivate}', this)">Active</button>` :
+                                `<button class="btn btn-sm status-btn status-pending" onclick="updateStatus('${user.actions.activate}', this)">Pending</button>`}
+                        </td>
+                        <td>
+                            ${user.bloque === 'oui' ?
+                                `<button class="btn btn-sm block-btn blocked-yes" onclick="updateBlockStatus('${user.actions.unblock}', this)">Blocked</button>` :
+                                `<button class="btn btn-sm block-btn blocked-no" onclick="updateBlockStatus('${user.actions.block}', this)">Unblocked</button>`}
+                        </td>
+                        <td>
+                            <a href="${user.actions.show}" class="btn btn-sm btn-outline-primary">Show</a>
+                            <a href="${user.actions.edit}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Search functionality with debounce
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            loadUsers(this.value);
+        }, 300);
+    });
+
+    // Sort functionality with dropdown
+    document.querySelectorAll('.sort-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all options
+            document.querySelectorAll('.sort-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            
+            // Add active class to selected option
+            this.classList.add('active');
+            
+            // Update current sort
+            currentSort.field = this.dataset.sort;
+            currentSort.order = this.dataset.order;
+            
+            // Update dropdown button text
+            const dropdownButton = document.getElementById('sortDropdown');
+            const sortText = this.textContent.split(' (')[0];
+            dropdownButton.innerHTML = `<i class="bi bi-sort-down"></i> ${sortText}`;
+            
+            // Load users with new sort
+            loadUsers(searchInput.value);
+        });
+    });
+
+    // Status update function
+    window.updateStatus = function(url, button) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                loadUsers(searchInput.value);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    };
+
+    // Block status update function
+    window.updateBlockStatus = function(url, button) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                loadUsers(searchInput.value);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    };
+
+    // Initial load
+    loadUsers();
+});
+</script>
+{% endblock %}

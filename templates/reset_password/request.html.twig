@@ -1,0 +1,25 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block title %}Forgot Password{% endblock %}
+
+{% block body %}
+    <div class="login-form">
+        <div class="title">Forgot Password</div>
+
+        {{ form_start(requestForm) }}
+        <div class="input-boxes">
+
+            <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                {{ form_widget(requestForm.email, {'attr': {'placeholder': 'Enter your email'}}) }}
+                {{ form_errors(requestForm.email) }}
+            </div>
+
+            <div class="button input-box">
+                <input type="submit" value="Send Reset Link">
+            </div>
+
+        </div>
+        {{ form_end(requestForm) }}
+    </div>
+{% endblock %}

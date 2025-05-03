@@ -1,0 +1,59 @@
+{% block subject %}Reset your password{% endblock %}
+
+{% block body_html %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reset your password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reset your password</h1>
+    
+    <p>Hello {{ user.firstName }},</p>
+    
+    <p>We received a request to reset your password. If you didn't make this request, you can ignore this email.</p>
+    
+    <p>To reset your password, click the button below:</p>
+    
+    <div style="text-align: center;">
+        <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" class="button">
+            Reset Password
+        </a>
+    </div>
+    
+    <p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+    
+    <p>If you're having trouble clicking the button, copy and paste this URL into your browser:</p>
+    <p>{{ url('app_reset_password', {token: resetToken.token}) }}</p>
+    
+    <div class="footer">
+        <p>This is an automated message, please do not reply to this email.</p>
+    </div>
+</body>
+</html>
+{% endblock %}

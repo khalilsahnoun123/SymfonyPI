@@ -1,0 +1,122 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="signup-form">
+        <div class="title">Signup</div>
+
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+        <div class="input-boxes">
+            <div class="input-box">
+                <i class="fas fa-user"></i>
+                {{ form_widget(registrationForm.firstName, {'attr': {'placeholder': 'First name'}}) }}
+                {{ form_errors(registrationForm.firstName) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-user"></i>
+                {{ form_widget(registrationForm.lastName, {'attr': {'placeholder': 'Last name'}}) }}
+                {{ form_errors(registrationForm.lastName) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                {{ form_widget(registrationForm.email, {'attr': {'placeholder': 'Email'}}) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ form_widget(registrationForm.gouvernorat, {'attr': {'placeholder': 'Governorate'}}) }}
+                {{ form_errors(registrationForm.gouvernorat) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-map"></i>
+                {{ form_widget(registrationForm.municipalite, {'attr': {'placeholder': 'Municipality'}}) }}
+                {{ form_errors(registrationForm.municipalite) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-home"></i>
+                {{ form_widget(registrationForm.adresse, {'attr': {'placeholder': 'Address'}}) }}
+                {{ form_errors(registrationForm.adresse) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-phone"></i>
+                {{ form_widget(registrationForm.phoneNumber, {'attr': {'placeholder': 'Phone number'}}) }}
+                {{ form_errors(registrationForm.phoneNumber) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-lock"></i>
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-lock"></i>
+                {{ form_widget(registrationForm.confirmPassword, {'attr': {'placeholder': 'Confirm Password'}}) }}
+                {{ form_errors(registrationForm.confirmPassword) }}
+            </div>
+
+            <div class="input-box">
+                {{ form_widget(registrationForm.agreeTerms) }}
+                {{ form_label(registrationForm.agreeTerms) }}
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            <div class="g-recaptcha mb-3 d-flex justify-content-center" data-sitekey="6LdJBSMrAAAAAFElcdzuDDZsopQKS5Kjxzk-vPgw"></div>
+
+            {% if registrationForm.vars.errors is not empty %}
+                {% for error in registrationForm.vars.errors %}
+                    <div class="alert alert-danger text-center">{{ error.message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="button input-box">
+                <input type="submit" value="Register">
+            </div>
+
+            <div class="text sign-up-text">
+                Already have an account? <a href="{{ path('app_login') }}">Login now</a>
+            </div>
+        </div>
+
+        {{ form_end(registrationForm) }}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleButtons = document.querySelectorAll('.toggle-password');
+
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const input = this.previousElementSibling;
+                    const icon = this.querySelector('i');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('bi-eye');
+                        icon.classList.add('bi-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('bi-eye-slash');
+                        icon.classList.add('bi-eye');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{% endblock %}

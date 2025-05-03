@@ -21,7 +21,10 @@
     <img src="{{ asset('assets/img/logo.png') }}" alt="Wasalni">
     <div class="title">Billet de Réservation</div>
   </div>
-
+  {# ===== QR Code ===== #}
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <img src="{{ qrCodeDataUri }}" alt="QR Code" style="width:150px;height:150px;" />
+  </div>
   <div class="section">
     <h4>Détails de la réservation</h4>
     <table class="info-table">

@@ -3,6 +3,9 @@
 
 namespace App\Controller\transportpublic;
 
+use Endroid\QrCode\Builder\BuilderInterface;
+
+use Endroid\QrCode\Writer\PngWriter;
 use App\Entity\transportpublic\User;
 use App\Entity\transportpublic\Ligne;
 use Dompdf\Dompdf;
@@ -63,27 +66,44 @@ public function index(Request $request, ReservationRepository $repo): Response
     ]);
 }
 #[Route('/mes-reservations/{id}/ticket', name: 'app_my_reservation_ticket', methods: ['GET'])]
-public function ticket(Reservation $reservation): Response
-{
-    // only confirmed reservations can get a ticket
+public function ticket(
+    Reservation $reservation,
+    BuilderInterface $defaultQrCodeBuilder  // inject the "default" builder
+): Response {
     if ($reservation->getStatus() !== 'CONFIRMED') {
         $this->addFlash('error', 'Seules les réservations confirmées peuvent produire un billet.');
         return $this->redirectToRoute('app_my_reservations');
     }
-    
-  
 
+    // 1. Prepare the data
+    $payload = [
+        'reservationId' => $reservation->getReservationId(),
+        'paid'          => $reservation->isPaid(), // assuming boolean getter
+    ];
+    // e.g. {"reservationId":"RES123","paid":true}
+    $dataString = json_encode($payload);
+
+    // 2. Build the QR code with that JSON
+    $qrResult = $defaultQrCodeBuilder->build(
+        data: $dataString,
+        size: 200
+    );
+
+    // 2. Get the PNG string and convert to base64
+    $qrPngString = $qrResult->getString(); 
+    $qrDataUri = 'data:' . $qrResult->getMimeType() . ';base64,' . base64_encode($qrPngString);
+
+    // 3. Render HTML with Twig
+    $html = $this->renderView('Front/Transportpublic/ticket.html.twig', [
+        'reservation' => $reservation,
+        'qrCodeDataUri' => $qrDataUri,
+    ]);
+
+    // 4. Generate PDF
     $options = new Options();
     $options->set('defaultFont', 'Helvetica');
     $options->setIsRemoteEnabled(true);
-
     $dompdf = new Dompdf($options);
-    // render the HTML of your voucher
-    $html = $this->renderView('Front/Transportpublic/ticket.html.twig', [
-        'reservation' => $reservation,
-       
-    ]);
-
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
@@ -97,6 +117,7 @@ public function ticket(Reservation $reservation): Response
         ]
     );
 }
+
     #[Route('/mes-reservations/{id}', name: 'app_my_reservation_show', methods: ['GET'])]
     public function showMyReservation(Reservation $reservation): Response
     {

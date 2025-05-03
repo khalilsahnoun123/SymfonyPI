@@ -1,0 +1,130 @@
+{# templates/Admin/reclamation/emailToUser.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Statut de votre réclamation</title>
+  <style>
+    /* Reset basique */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table { border-collapse: collapse !important; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+
+    /* Conteneur principal */
+    .email-wrapper {
+      width: 100%; 
+      background-color: #f4f4f7; 
+      padding: 40px 0;
+      font-family: Arial, sans-serif;
+    }
+    .email-content {
+      max-width: 600px; 
+      margin: 0 auto; 
+      background-color: #ffffff; 
+      border-radius: 8px; 
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    /* En-tête */
+    .email-header {
+      background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .email-header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    /* Corps */
+    .email-body {
+      padding: 30px;
+      color: #51545E;
+      line-height: 1.5;
+    }
+    .email-body h2 {
+      margin-top: 0;
+      color: #333333;
+    }
+    .status {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      margin: 15px 0;
+    }
+    .status-resolue {
+      background-color: #D1FAE5;
+      color: #065F46;
+    }
+    .status-refusee {
+      background-color: #FECACA;
+      color: #991B1B;
+    }
+
+    /* Bouton */
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4361ee;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    /* Pied de page */
+    .email-footer {
+      background-color: #f4f4f7;
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #A8AAAF;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-content">
+      <div class="email-header">
+        <h1>Suivi de votre réclamation</h1>
+      </div>
+      <div class="email-body">
+        <p>Bonjour,</p>
+
+        <h2>Réclamation n°{{ reclamation.id }}</h2>
+        <p>Type : <strong>{{ reclamation.type.libelle }}</strong></p>
+        <p>Date de création : {{ reclamation.dateCreation|date('d/m/Y H:i') }}</p>
+
+        {% if reclamation.status == 'resolue' %}
+          <div class="status status-resolue">Résolue</div>
+          <p>Bonne nouvelle ! Votre réclamation a été <strong>résolue</strong>.</p>
+        {% else %}
+          <div class="status status-refusee">Refusée</div>
+          <p>Nous sommes désolés, votre réclamation a été <strong>refusée</strong>. Veuillez consulter la réponse ci-dessous pour plus de détails.</p>
+        {% endif %}
+
+        {% if reclamation.reponse %}
+          <h3>Réponse de l’équipe :</h3>
+          <p>{{ reclamation.reponse }}</p>
+        {% endif %}
+
+        <a href="{{ url('user_reclamation_show', {id: reclamation.id}) }}" class="btn">Voir ma réclamation</a>
+
+        <p style="margin-top:40px;">
+          Si vous avez des questions, n’hésitez pas à contacter notre support en répondant à cet email.
+        </p>
+      </div>
+    </div>
+
+    <div class="email-footer">
+      &copy; {{ "now"|date("Y") }} Wasalni. Tous droits réservés.
+    </div>
+  </div>
+</body>
+</html>

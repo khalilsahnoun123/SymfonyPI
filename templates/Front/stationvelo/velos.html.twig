@@ -1,0 +1,278 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Bikes at {{ station.name_station }}{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12">
+            <!-- Header Section -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h2 mb-1 text-primary">
+                        <i class="fas fa-bicycle me-2"></i>
+                        Bikes at {{ station.name_station }}
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ path('app_stations_search') }}">Stations</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ station.name_station }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <a href="{{ path('app_stations_search') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Stations
+                </a>
+            </div>
+
+            <!-- Station Info Card -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h6 text-muted mb-1">Address</h3>
+                                    <p class="mb-0">{{ station.adresse }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-city text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h6 text-muted mb-1">Municipality</h3>
+                                    <p class="mb-0">{{ station.municapilite }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-flag text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="h6 text-muted mb-1">Governorate</h3>
+                                    <p class="mb-0">{{ station.gouvernera }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bikes Section -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h4 mb-0">Available Bikes</h2>
+                <span class="badge bg-primary bg-opacity-10 text-primary">
+                    {{ velos|length }} bike{{ velos|length != 1 ? 's' : '' }} available
+                </span>
+            </div>
+
+            {% if velos is empty %}
+                <div class="card shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                            <i class="fas fa-bicycle-slash fa-3x text-muted"></i>
+                        </div>
+                        <h3 class="h5">No bikes available</h3>
+                        <p class="text-muted mb-0">All bikes are currently rented from this station</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row g-4">
+                    {% for velo in velos %}
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="card h-100 border-0 shadow-sm bike-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h3 class="h5 mb-1">{{ velo.veloType ? velo.veloType.type_name : 'Standard Bike' }}</h3>
+                                        <span class="badge bg-light text-dark small">ID: {{ velo.id_velo }}</span>
+                                    </div>
+                                    <span class="badge {% if velo.dispo %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ velo.dispo ? 'Available' : 'Rented' }}
+                                    </span>
+                                </div>
+                                
+                                <div class="card-image">
+                                    {% if velo.veloType and velo.veloType.veloImage %}
+                                        <img src="{{ asset(velo.veloType.veloImage) }}" alt="{{ velo.veloType.type_name }}" class="img-fluid">
+                                    {% else %}
+                                        <i class="fas fa-bicycle placeholder-icon"></i>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if velo.dispo %}
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-clock text-muted me-2"></i>
+                                        <span class="small">Price per hour</span>
+                                    </div>
+                                    <h4 class="text-primary mb-0">{{ velo.veloType.price }} TND</h4>
+                                </div>
+                                
+                               {# Inside the bike card form #}
+{# Inside the bike card form #}
+<form method="post" action="{{ path('app_reservationvelo_start') }}" 
+      data-hourly-rate="{{ velo.veloType.price }}" 
+      class="reservation-form">
+    <input type="hidden" name="velo_id" value="{{ velo.id_velo }}" />
+    
+    <div class="mb-3">
+        <label class="form-label small text-muted">Start Date & Time</label>
+        <input type="datetime-local" 
+               name="start_date" 
+               class="form-control start-date"
+               required
+               min="{{ "now"|date('Y-m-d\\TH:i') }}">
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label small text-muted">End Date & Time</label>
+        <input type="datetime-local" 
+               name="end_date" 
+               class="form-control end-date"
+               required
+               min="{{ "now"|date('Y-m-d\\TH:i') }}">
+    </div>
+
+    <div class="calculation-summary mb-3 p-3 bg-light rounded">
+        <div class="d-flex justify-content-between small">
+            <span class="text-muted">Duration:</span>
+            <span class="text-primary duration-display">0 hours</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <span class="text-muted">Total Price:</span>
+            <span class="text-success fw-bold price-display">0.00 TND</span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+        <i class="fas fa-calendar-check me-2"></i>Reserve Now
+    </button>
+</form>
+                                {% else %}
+                                <div class="text-center py-3">
+                                    <span class="badge bg-light text-dark">Available soon</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .bike-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .bike-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+    }
+    
+    .bg-opacity-10 {
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+</style>
+{# Add this at the bottom of your bikes.html.twig template #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all reservation forms
+    document.querySelectorAll('.reservation-form').forEach(form => {
+        const hourlyRate = parseFloat(form.dataset.hourlyRate);
+        const startInput = form.querySelector('.start-date');
+        const endInput = form.querySelector('.end-date');
+        const durationDisplay = form.querySelector('.duration-display');
+        const priceDisplay = form.querySelector('.price-display');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        // Update price calculation
+        const updateCalculation = () => {
+            try {
+                const startDate = new Date(startInput.value);
+                const endDate = new Date(endInput.value);
+                
+                if (startDate && endDate && endDate > startDate) {
+                    // Calculate duration in hours with decimals
+                    const diffMs = endDate - startDate;
+                    const hours = diffMs / (1000 * 60 * 60);
+                    const roundedHours = Math.round(hours * 100) / 100;
+                    const totalPrice = roundedHours * hourlyRate;
+
+                    // Update displays
+                    durationDisplay.textContent = `${roundedHours} hrs`;
+                    priceDisplay.textContent = `${totalPrice.toFixed(2)} TND`;
+                    submitBtn.disabled = false;
+                } else {
+                    durationDisplay.textContent = '0 hrs';
+                    priceDisplay.textContent = '0.00 TND';
+                    submitBtn.disabled = true;
+                }
+            } catch (error) {
+                console.error('Calculation error:', error);
+            }
+        };
+
+        // Date validation
+        const validateDates = () => {
+            const startDate = new Date(startInput.value);
+            const endDate = new Date(endInput.value);
+            
+            if (endDate <= startDate) {
+                endInput.setCustomValidity('End date must be after start date');
+            } else {
+                endInput.setCustomValidity('');
+            }
+        };
+
+        // Event listeners
+        startInput.addEventListener('change', () => {
+            endInput.min = startInput.value;
+            validateDates();
+            updateCalculation();
+        });
+
+        endInput.addEventListener('change', () => {
+            validateDates();
+            updateCalculation();
+        });
+
+        // Initial setup
+        updateCalculation();
+    });
+
+    // Form submission handler
+    document.querySelectorAll('.reservation-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                alert('Please fill in all required fields correctly');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

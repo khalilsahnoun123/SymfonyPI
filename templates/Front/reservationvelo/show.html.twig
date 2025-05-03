@@ -1,0 +1,73 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+
+{% block title %}Reservation Details{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-5 fw-bold text-primary">Reservation Details</h1>
+                <div>
+                    <a href="{{ path('app_reservationvelo_index') }}" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left me-1"></i> Back to list
+                    </a>
+                    
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr class="border-bottom">
+                                <th class="py-3 text-muted" style="width: 30%">Start Date</th>
+                                <td class="py-3">{{ reservationvelo.dateDebut ? reservationvelo.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <th class="py-3 text-muted">End Date</th>
+                                <td class="py-3">{{ reservationvelo.dateFin ? reservationvelo.dateFin|date('Y-m-d') : '' }}</td>
+                            </tr>
+                            <tr class="border-bottom">
+                                <th class="py-3 text-muted">Status</th>
+                                <td class="py-3">
+                                    <span class="badge 
+                                        {% if reservationvelo.statut == 'Confirmed' %}bg-success
+                                        {% elseif reservationvelo.statut == 'Pending' %}bg-warning
+                                        {% elseif reservationvelo.statut == 'Cancelled' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ reservationvelo.statut }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="py-3 text-muted">Price</th>
+                                <td class="py-3 fw-bold text-primary">{{ reservationvelo.price }} TND</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-end">
+                {{ include('Front/reservationvelo/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table-borderless td, .table-borderless th {
+        padding: 12px 0;
+    }
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.35em 0.65em;
+        font-weight: 500;
+    }
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075) !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Waiting for Payment...</title>
+</head>
+<body>
+    <h2>Waiting for Payment</h2>
+    <p>The payment page has opened in a new tab. Please complete your payment there.</p>
+
+    <script>
+        const paymentRef = '{{ payment_ref }}';
+
+        if (!paymentRef) {
+            alert('Missing payment reference.');
+        } else {
+            setInterval(() => {
+                fetch('{{ path('app_reservationvelo_check_payment_status') }}?payment_ref=' + paymentRef)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Payment status:', data.status);
+
+                        if (data.status === 'completed') {
+                            window.location.href = '{{ path('app_reservationvelo_payment_success') }}?payment_ref=' + paymentRef;
+                        } else if (data.status === 'failed') {
+                            alert('Payment failed. Please try again.');
+                            window.location.href = '{{ path('app_stations_search') }}';
+                        }
+                    })
+                    .catch(error => console.error('Error checking payment status:', error));
+            }, 5000); // Check every 5 seconds
+        }
+    </script>
+</body>
+</html>
+
+
+{% endblock %}

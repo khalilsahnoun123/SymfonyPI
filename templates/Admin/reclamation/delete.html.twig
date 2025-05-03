@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de Suppression{% endblock %}
+
+{% block body %}
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+  </header><!-- End Header -->
+
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-heading">Pages</li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('admin_reclamation_index') }}">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Reclamations</span>
+        </a>
+      </li>
+    </ul>
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <section class="section dashboard">
+      <div class="dashboard-container">
+        <div class="header-section">
+          <h1 class="header-title">Confirmer la suppression</h1>
+          <p class="text-muted">Êtes-vous sûr de vouloir supprimer cette réclamation ? Cette action est irréversible.</p>
+        </div>
+
+        <div class="confirmation-box">
+          <h4>Réclamation #{{ reclamation.id }}</h4>
+          <p><strong>Utilisateur :</strong> {{ reclamation.utilisateurId }}</p>
+          <p><strong>Type de réclamation :</strong> {{ reclamation.type.libelle }}</p>
+          <p><strong>Status :</strong> {{ reclamation.status }}</p>
+
+          <form action="{{ path('admin_reclamation_delete', {'id': reclamation.id}) }}" method="POST">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+            <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+            <a href="{{ path('admin_reclamation_index') }}" class="btn btn-secondary">Annuler</a>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

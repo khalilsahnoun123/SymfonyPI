@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Réclamation{% endblock %}
+
+{% block body %}
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{{ path('admin_reclamation_index') }}" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+  </header>
+
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('admin_reclamation_index') }}">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Reclamations</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <div class="container mt-5">
+      <h1 class="mb-4">Modifier Réclamation #{{ reclamation.id }}</h1>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Réclamation de l'utilisateur #{{ reclamation.utilisateurId }}</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="{{ path('admin_reclamation_edit', {'id': reclamation.id}) }}">
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea id="description" class="form-control" name="description" rows="5" disabled>{{ reclamation.description }}</textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="status" class="form-label">Statut</label>
+              <select id="status" class="form-control" name="status">
+                <option value="en attente" {% if reclamation.status == 'en attente' %}selected{% endif %}>En Attente</option>
+                <option value="en cours" {% if reclamation.status == 'en cours' %}selected{% endif %}>En Cours</option>
+                <option value="resolue" {% if reclamation.status == 'resolue' %}selected{% endif %}>Résolue</option>
+                <option value="refusee" {% if reclamation.status == 'refusee' %}selected{% endif %}>Refusée</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="reponse" class="form-label">Réponse de l'admin</label>
+                <textarea id="reponse" class="form-control" name="reponse" rows="5">{{ reclamation.reponse }}</textarea>
+            </div>
+
+
+            <div class="mb-3 d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Rependre</button>
+            <a href="{{ path('admin_reclamation_index') }}" class="btn btn-secondary">Retour</a>
+            </div>
+
+          </form>
+
+          {% if app.session.flashbag.has('success') %}
+            <div class="alert alert-success">
+              {{ app.session.flashbag.get('success')[0] }}
+            </div>
+          {% endif %}
+
+          {% if app.session.flashbag.has('warning') %}
+            <div class="alert alert-warning">
+              {{ app.session.flashbag.get('warning')[0] }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}

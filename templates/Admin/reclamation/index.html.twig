@@ -1,0 +1,349 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Réclamations{% endblock %}
+
+{% block body %}
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div><!-- End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle" href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">user name</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-person-fill"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+          </ul>
+        </li><!-- End Profile Nav -->
+      </ul>
+    </nav><!-- End Icons Navigation -->
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-heading">Pages</li>
+      <li class="nav-item">
+          <i class="bi bi-house-door-fill"></i>
+          <span>Home</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('admin_reclamation_index') }}">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Reclamations</span>
+        </a>
+      </li>
+    </ul>
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <section class="section dashboard">
+      <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+
+        .dashboard-container {
+            max-width: 100%;
+            padding: 2rem;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .reclamations-scroller {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 1rem 0.5rem;
+        }
+
+        .reclamation-card {
+            flex: 0 0 auto;
+            width: 320px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .detail-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .detail-content h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .detail-content p {
+            margin: 0.25rem 0 0;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.view {
+            background: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+
+        .action-btn.edit {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .action-btn.delete {
+            background: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+      </style>
+
+      <div class="dashboard-container">
+        <div class="header-section">
+            <div>
+                <h1 class="header-title"><i class="bi bi-exclamation-triangle-fill"></i> Liste des Réclamations</h1>
+                <p class="text-muted">Gérez toutes les réclamations des utilisateurs</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{{ path('admin_typereclamation_index') }}" class="btn btn-primary">
+                    <i class="bi bi-gear-fill"></i> Gérer les types de réclamation
+                </a>
+            </div>
+        </div>
+
+         <!-- Formulaire de recherche -->
+            <form method="GET" action="{{ path('admin_reclamation_index') }}" class="d-flex mb-4">
+                <input type="text" name="query" placeholder="Rechercher par utilisateur ID ou réclamation ID" class="form-control me-2 flex-grow-1" value="{{ app.request.query.get('query') }}">
+
+                <!-- Dynamique : Afficher les types de réclamations récupérés dans la base -->
+                <select name="type" class="form-select me-2" style="max-width: 180px;">
+                    <option value="">Filtrer par type</option>
+                    {% for type in typesReclamation %}
+                        <option value="{{ type.id }}" {% if app.request.query.get('type') == type.id %}selected{% endif %}>
+                            {{ type.libelle }}
+                        </option>
+                    {% endfor %}
+                </select>
+                
+                <!-- Dynamique : Afficher les statuts récupérés -->
+                <select name="status" class="form-select me-2" style="max-width: 180px;">
+                    <option value="">Filtrer par statut</option>
+                    {% for statut in statuts %}
+                        <option value="{{ statut }}" {% if app.request.query.get('status') == statut %}selected{% endif %}>
+                            {{ statut|capitalize }}
+                        </option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </form>
+
+
+
+
+      
+
+        <div class="reclamations-scroller">
+            {% for reclamation in reclamations %}
+                <div class="reclamation-card">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Réclamation #{{ reclamation.id }}</h3>
+                            <span class="
+                                {% if reclamation.status == 'en attente' %}
+                                    badge bg-warning text-dark
+                                {% elseif reclamation.status == 'en cours' %}
+                                    badge bg-primary
+                                {% elseif reclamation.status == 'resolue' %}
+                                    badge bg-success
+                                {% elseif reclamation.status == 'refusee' %}
+                                    badge bg-danger
+                                {% else %}
+                                    badge bg-secondary
+                                {% endif %}
+                            ">
+                                <i class="bi bi-flag"></i> {{ reclamation.status|capitalize }}
+                            </span>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <h4>ID Utilisateur</h4>
+                                    <p>{{ reclamation.utilisateurId }}</p>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <h4>Type de réclamation</h4>
+                                    <p>{{ reclamation.type.libelle }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <a href="{{ path('admin_reclamation_show', {'id': reclamation.id}) }}" class="action-btn view">
+                                <i class="bi bi-eye-fill"></i> Voir
+                            </a>
+                            <a href="{{ path('admin_reclamation_edit', {'id': reclamation.id}) }}" class="action-btn edit">
+                                <i class="bi bi-pencil-fill"></i> Rependre
+                            </a>
+                            <form action="{{ path('admin_reclamation_delete', {'id': reclamation.id}) }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                                <button type="submit" class="action-btn delete">
+                                    <i class="bi bi-trash-fill"></i> Supprimer
+                                </button>
+                            </form>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la Réclamation{% endblock %}
+
+{% block body %}
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{{ path('admin_reclamation_index') }}" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+  </header>
+
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('admin_reclamation_index') }}">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Reclamations</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <div class="container mt-5">
+      <h1 class="mb-4">Détail de la Réclamation #{{ reclamation.id }}</h1>
+
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <h3>Réclamation de l'utilisateur #{{ reclamation.utilisateurId }}</h3>
+          </div>
+          <div>
+            {% set badgeClass = '' %}
+            {% if reclamation.status == 'en attente' %}
+              {% set badgeClass = 'badge bg-warning text-dark' %}
+            {% elseif reclamation.status == 'en cours' %}
+              {% set badgeClass = 'badge bg-primary' %}
+            {% elseif reclamation.status == 'resolue' %}
+              {% set badgeClass = 'badge bg-success' %}
+            {% elseif reclamation.status == 'refusee' %}
+              {% set badgeClass = 'badge bg-danger' %}
+            {% endif %}
+            <span class="{{ badgeClass }}">{{ reclamation.status|capitalize }}</span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Date de création</label>
+            <input type="text" class="form-control" value="{{ reclamation.dateCreation ? reclamation.dateCreation|date('d/m/Y H:i') : 'Non spécifiée' }}" disabled>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="5" disabled>{{ reclamation.description }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Type de Réclamation</label>
+            <input type="text" class="form-control" value="{{ reclamation.type ? reclamation.type.libelle : 'Aucun type défini' }}" disabled>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">ID Utilisateur</label>
+            <input type="text" class="form-control" value="{{ reclamation.utilisateurId }}" disabled>
+          </div>
+          
+          {% if reclamation.attachment %}
+            <div class="mb-3">
+              <label class="form-label">Pièce jointe</label><br>
+
+              {% set attachmentPath = 'uploads/attachments/' ~ reclamation.attachment %}
+
+              {% if reclamation.attachment matches '/\.(jpg|jpeg|png|gif)$/i' %}
+                <img src="{{ asset(attachmentPath) }}" alt="Pièce jointe" style="max-width: 400px; height: auto;" class="img-thumbnail mt-2">
+              {% elseif reclamation.attachment matches '/\.(pdf)$/i' %}
+                <a href="{{ asset(attachmentPath) }}" target="_blank" class="btn btn-outline-info mt-2">
+                  <i class="bi bi-file-earmark-pdf"></i> Voir la pièce jointe (PDF)
+                </a>
+              {% else %}
+                <a href="{{ asset(attachmentPath) }}" target="_blank" class="btn btn-outline-secondary mt-2">
+                  <i class="bi bi-paperclip"></i> Télécharger la pièce jointe
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if reclamation.status == 'resolue' %}
+                  <hr>
+                  <h5 class="mt-4 text-success">Évaluation de l'utilisateur</h5>
+
+                  <div class="mb-3">
+                    <label class="form-label">Note de satisfaction</label>
+                    {% if reclamation.note!=null %}
+                      <div class="text-warning" style="font-size: 1.5rem;">
+                     {% for i in 1..reclamation.note %}
+                       ★
+                     {% endfor %}
+                    {% for i in (reclamation.note + 1)..5 %}
+                     ☆
+                   {% endfor %}
+                  <span class="ms-2">({{ reclamation.note }} / 5)</span>
+                </div>
+              {% else %}
+                <div class="text-muted">Non évaluée</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Commentaire de satisfaction</label>
+              <div class="border rounded p-3 bg-light">
+                {{ reclamation.commentaireSatisfaction ?: 'Non fourni' }}
+              </div>
+            </div>
+          {% endif %}
+         </div>
+
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <div class="d-flex gap-2">
+            <a href="{{ path('admin_reclamation_edit', {'id': reclamation.id}) }}" class="btn btn-primary">
+              <i class="bi bi-pencil-square"></i> Rependre
+            </a>
+
+            <form method="post" action="{{ path('admin_reclamation_delete', {'id': reclamation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?');">
+              <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+              <button class="btn btn-danger">
+                <i class="bi bi-trash3-fill"></i> Supprimer
+              </button>
+            </form>
+          </div>
+
+          <a href="{{ path('admin_reclamation_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle-fill"></i> Retour
+          </a>
+        </div>
+        
+      </div>
+    </div>
+  </main>
+{% endblock %}

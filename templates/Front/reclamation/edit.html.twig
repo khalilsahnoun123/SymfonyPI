@@ -1,0 +1,37 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Modifier Réclamation{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold text-primary">Modifier votre réclamation</h1>
+                <a href="{{ path('user_reclamation_show', {'id': reclamation.id}) }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Retour
+                </a>
+            </div>
+
+            <div class="bg-white rounded-3 shadow-sm p-4">
+                {{ form_start(form) }}
+                    <div class="mb-3">
+                        {{ form_label(form.type) }}
+                        {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_errors(form.type) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary"><i class="fas fa-save me-1"></i> Enregistrer</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

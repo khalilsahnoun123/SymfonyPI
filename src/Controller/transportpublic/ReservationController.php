@@ -2,6 +2,7 @@
 // src/Controller/ReservationController.php
 
 namespace App\Controller\transportpublic;
+
 use App\Entity\transportpublic\User;
 use App\Entity\transportpublic\Ligne;
 use Dompdf\Dompdf;
@@ -31,7 +32,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-
 
 use App\Service\FlouciClient;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -70,6 +70,8 @@ public function ticket(Reservation $reservation): Response
         $this->addFlash('error', 'Seules les réservations confirmées peuvent produire un billet.');
         return $this->redirectToRoute('app_my_reservations');
     }
+    
+  
 
     $options = new Options();
     $options->set('defaultFont', 'Helvetica');
@@ -79,6 +81,7 @@ public function ticket(Reservation $reservation): Response
     // render the HTML of your voucher
     $html = $this->renderView('Front/Transportpublic/ticket.html.twig', [
         'reservation' => $reservation,
+       
     ]);
 
     $dompdf->loadHtml($html);
@@ -101,6 +104,7 @@ public function ticket(Reservation $reservation): Response
 
         return $this->render('Front/Transportpublic/reservation_detail.html.twig', [
             'reservation' => $reservation,
+           
         ]);
     }
     #[Route('/mes-reservations', name: 'app_my_reservations', methods: ['GET'])]

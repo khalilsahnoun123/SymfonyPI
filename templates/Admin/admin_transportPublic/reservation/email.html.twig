@@ -19,12 +19,12 @@
     <p class="detail"><strong>Prix total :</strong> {{ reservation.total_price }} TND</p>
     <p class="detail"><strong>Gare de départ :</strong> {{ reservation.depart_station.nom }}</p>
     <p class="detail"><strong>Gare d'arrivée :</strong> {{ reservation.fin_station.nom }}</p>
-    <p class="detail"><strong>Statut de paiement :</strong> 
-        {% if reservation.paid %}
+    <p class="detail"><strong> {% if reservation.paid %}
             Payé
         {% else %}
             Non payé
-        {% endif %}
+        {% endif %}</strong> 
+       
     </p>
 </body>
 </html>

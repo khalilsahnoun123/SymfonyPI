@@ -1,0 +1,289 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la réservation taxi{% endblock %}
+
+{% block body %}
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="">
+        <span class="d-none d-lg-block">Wasalni</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div><!-- End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
+
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">user name</span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+      </ul>
+    </nav><!-- End Icons Navigation -->
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-heading">Pages</li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="users-profile.html">
+          <i class="bi bi-person"></i>
+          <span>Home</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_stations_index') }}">
+          <i class="bi bi-bicycle"></i>
+          <span>Gestion De Vélo</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_covoiturage_index') }}">
+          <i class="bi bi-car-front"></i>
+          <span>Gestion De Covoiturage</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link active" href="{{ path('app_reservation_taxi_index') }}">
+          <i class="bi bi-taxi-front"></i>
+          <span>Réservations Taxi</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{ path('app_vehicule_index') }}">
+          <i class="bi bi-taxi-front"></i>
+          <span>Gestion De Taxi</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-login.html">
+          <i class="bi bi-bus-front"></i>
+          <span>Transport Publique</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="pages-error-404.html">
+          <i class="bi bi-chat-dots"></i>
+          <span>Reclamation</span>
+        </a>
+      </li>
+    </ul>
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <section class="section dashboard">
+      <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a0ca3;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --danger: #f72585;
+        }
+        
+        .details-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+        }
+        
+        .details-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .details-title {
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.25rem;
+        }
+        
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .details-table tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .details-table th {
+            text-align: left;
+            padding: 1rem 0;
+            width: 30%;
+            font-weight: 600;
+            color: var(--gray);
+        }
+        
+        .details-table td {
+            padding: 1rem 0;
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .btn-back {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-edit {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .delete-form {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 768px) {
+            .details-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+      </style>
+      
+      <div class="details-container">
+        <div class="details-header">
+            <h1 class="details-title">🚖 Détails de la réservation taxi</h1>
+        </div>
+
+        <table class="details-table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ reservation_taxi.id }}</td>
+                </tr>
+                <tr>
+                    <th>Statut</th>
+                    <td>{{ reservation_taxi.status }}</td>
+                </tr>
+                <tr>
+                    <th>Véhicule</th>
+                    <td>Taxi #{{ reservation_taxi.vehicule.id }}</td>
+                </tr>
+                <tr>
+                    <th>Client</th>
+                    <td>Utilisateur #{{ reservation_taxi.user.id }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="action-buttons">
+            <a href="{{ path('app_reservation_taxi_index') }}" class="btn btn-back">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+            <a href="{{ path('app_reservation_taxi_edit', {'id': reservation_taxi.id}) }}" class="btn btn-edit">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+        </div>
+
+        <div class="delete-form">
+            <form method="post" action="{{ path('app_reservation_taxi_delete', {'id': reservation_taxi.id}) }}" 
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservation_taxi.id) }}">
+                <button class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Supprimer la réservation
+                </button>
+            </form>
+        </div>
+      </div>
+    </section>
+  </main><!-- End #main -->
+{% endblock %}

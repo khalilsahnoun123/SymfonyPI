@@ -1,0 +1,13 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Edit Reservationvelo{% endblock %}
+
+{% block body %}
+    <h1>Edit Reservationvelo</h1>
+
+    {{ include('Front/reservationvelo/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_reservationvelo_index') }}">back to list</a>
+
+    {{ include('Front/reservationvelo/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,10 @@
+<h2>Hello {{ user.nom }}</h2>
+
+<p>Thank you for reserving a bike!</p>
+
+<p><strong>Type:</strong> {{ velo.veloType.type_name }}</p>
+<p><strong>Price:</strong> {{ reservation.price }} TND</p>
+<p><strong>Start:</strong> {{ reservation.dateDebut|date('Y-m-d H:i') }}</p>
+<p><strong>End:</strong> {{ reservation.dateFin|date('Y-m-d H:i') }}</p>
+
+<p>Have a safe ride!</p>

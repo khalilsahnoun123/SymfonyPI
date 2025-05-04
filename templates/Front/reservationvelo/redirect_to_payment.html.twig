@@ -1,0 +1,26 @@
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block body %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting to Payment...</title>
+</head>
+<body>
+    <p>Redirecting you to the payment page...</p>
+
+    <script>
+        // Open payment page in a new tab
+        const paymentWindow = window.open('{{ paymentUrl }}', '_blank');
+
+        if (!paymentWindow) {
+            alert('Please allow popups for this website.');
+        }
+
+        // Redirect main window to "waiting" page (optional)
+        window.location.href = '{{ path('app_reservationvelo_wait_payment') }}';
+    </script>
+</body>
+</html>
+
+{% endblock %}

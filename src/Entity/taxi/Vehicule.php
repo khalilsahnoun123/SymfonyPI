@@ -41,9 +41,6 @@ class Vehicule
 private ?string $numserie = null;
 
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'vehicules')]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id')]
-    private ?User $user = null;
 
     #[ORM\OneToMany(targetEntity: ReservationTaxi::class, mappedBy: 'vehicule')]
     private Collection $reservations;
@@ -68,8 +65,6 @@ private ?string $numserie = null;
     public function getNumserie(): ?string { return $this->numserie; }
     public function setNumserie(string $numserie): self { $this->numserie = $numserie; return $this; }
 
-    public function getUser(): ?User { return $this->user; }
-    public function setUser(?User $user): self { $this->user = $user; return $this; }
 
     /** @return Collection<int, ReservationTaxi> */
     public function getReservations(): Collection { return $this->reservations; }

@@ -22,9 +22,7 @@ class ReservationTaxi
     #[ORM\JoinColumn(name: 'id_vehicule', referencedColumnName: 'id')]
     private ?Vehicule $vehicule = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id')]
-    private ?User $user = null;
+    
 
     #[ORM\Column(type: 'string', length: 20)]
     private string $status = self::STATUS_PENDING;
@@ -72,15 +70,5 @@ class ReservationTaxi
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
+  
 }

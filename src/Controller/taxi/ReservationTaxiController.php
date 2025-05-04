@@ -25,7 +25,7 @@ final class ReservationTaxiController extends AbstractController
     #[Route(name: 'app_reservation_taxi_index', methods: ['GET'])]
     public function index(ReservationTaxiRepository $reservationTaxiRepository): Response
     {
-        return $this->render('Admin/index.html.twig', [
+        return $this->render('Admin/taxi/reservation_taxi/index.html.twig', [
             'reservation_taxis' => $reservationTaxiRepository->findAll(),
         ]);
     }

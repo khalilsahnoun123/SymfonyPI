@@ -38,7 +38,7 @@
 
   <!-- Template Main JS File -->
   <script src="{{asset('assets/js/main.js')}}"></script>
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+           
         {% endblock %}
     </head>
     <body>
@@ -66,32 +66,75 @@
                         </a>
                     </li>
 
-                    <li class="nav-item dropdown pe-3">
-                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                            <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle profile-img">
-                            <span class="d-none d-md-block dropdown-toggle ps-2">User Name</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                    <i class="bi bi-person"></i>
-                                    <span>My Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <i class="bi bi-box-arrow-right"></i>
-                                    <span>Sign Out</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+       <li class="nav-item dropdown pe-3">
+
+    {% if app.user %}
+        {# Logged-in user dropdown #}
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{{ app.user.image ? asset(app.user.image) : asset('assets/img/profile-img.jpg') }}"
+                 alt="Profile" class="rounded-circle" width="32" height="32">
+            <span class="d-none d-md-block dropdown-toggle ps-2">
+                {{ app.user.firstName ~ ' ' ~ app.user.lastName }}
+            </span>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header text-center">
+                <h6>{{ app.user.firstName ~ ' ' ~ app.user.lastName }}</h6>
+                <span>{{ app.user.email }}</span>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_user_profil', {'id': app.user.id}) }}">
+                    <i class="bi bi-person"></i>
+                    <span>My Profile</span>
+                </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_logout') }}">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Sign Out</span>
+                </a>
+            </li>
+        </ul>
+
+    {% else %}
+        {# Guest (not logged-in) dropdown #}
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="{{ asset('assets/img/profile-img.jpg') }}" alt="Default Profile" class="rounded-circle" width="32" height="32">
+            <span class="d-none d-md-block dropdown-toggle ps-2">Guest</span>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_register') }}">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Sign Up</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="dropdown-item d-flex align-items-center" href="{{ path('app_login') }}">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Sign In</span>
+                </a>
+            </li>
+        </ul>
+    {% endif %}
+
+</li>
+
+
                 </ul>
             </nav>
         </header>
+
+
 
         <style>
             .header {

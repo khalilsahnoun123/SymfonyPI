@@ -1,0 +1,77 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+
+    <div class="login-form">
+        <div class="title">Login</div>
+
+        {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="alert alert-info">
+                You are already logged in as {{ app.user.userIdentifier }}.
+                <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-secondary mt-2">Logout</a>
+            </div>
+        {% endif %}
+
+        {# Google Login Button #}
+        <div class="text-center mb-4">
+            <a href="{{ path('connect_google_start', {service: 'google'}) }}" class="btn btn-danger w-100" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 0;">
+                <i class="fab fa-google"></i> Sign in with Google
+            </a>
+        </div>
+
+        <form method="post">
+            <div class="input-boxes">
+                <div class="input-box">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" id="inputEmail" value="{{ last_username }}" placeholder="Enter your email" required autofocus>
+                </div>
+
+                <div class="input-box">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" id="inputPassword" placeholder="Enter your password" required>
+                </div>
+
+
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="text">
+                    <a href="{{ path('app_forgot_password_request') }}">Forgot password?</a>
+                </div>
+
+                <div class="button input-box">
+                    <input type="submit" value="Sign in">
+                </div>
+
+                <div class="text sign-up-text">
+                    Don't have an account? <a href="{{ path('app_register') }}">Signup now</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.querySelector('.toggle-password');
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    const passwordInput = document.getElementById('inputPassword');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                    } else {
+                        passwordInput.type = 'password';
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

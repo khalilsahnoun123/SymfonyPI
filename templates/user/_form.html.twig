@@ -1,0 +1,146 @@
+{{ form_start(form, {
+    'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}
+}) }}
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.nom) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.firstName) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.lastName, 'Nom de famille', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.lastName) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.email) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.gouvernorat, 'Gouvernorat', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.gouvernorat, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.gouvernorat) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.municipalite, 'Municipalité', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.municipalite, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.municipalite) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.adresse, 'Adresse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.adresse) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.phoneNumber, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.phoneNumber) }}
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.password) }}
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.roles, 'Rôles', {'label_attr': {'class': 'form-label d-block'}}) }}
+
+        {% for checkbox in form.roles %}
+            <div class="form-check mb-1">
+                {{ form_widget(checkbox, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(checkbox, null, {'label_attr': {'class': 'form-check-label'}}) }}
+            </div>
+        {% endfor %}
+
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.roles) }}
+        </div>
+    </div>
+
+
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.image, 'Image', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+        <div class="invalid-feedback d-block">
+            {{ form_errors(form.image) }}
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+</div>
+
+{{ form_end(form) }}
+
+<style>
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+        display: block !important;
+    }
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+    .form-control.is-invalid:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+    .form-check-input.is-invalid {
+        border-color: #dc3545;
+    }
+    .form-check-input.is-invalid:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add is-invalid class to form controls with errors
+    document.querySelectorAll('.invalid-feedback').forEach(function(element) {
+        if (element.textContent.trim() !== '') {
+            const formControl = element.previousElementSibling;
+            if (formControl) {
+                if (formControl.classList.contains('form-check-input')) {
+                    formControl.classList.add('is-invalid');
+                } else {
+                    formControl.classList.add('is-invalid');
+                }
+            }
+        }
+    });
+});
+</script>

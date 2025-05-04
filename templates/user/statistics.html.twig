@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Statistics{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="mb-4">Top 5 Most Active Users</h1>
+        <canvas id="activityChart" height="120"></canvas>
+        <a href="{{ path('app_user_index') }}" class="btn btn-link mt-4">← Back to list</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('activityChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: [
+                    {% for user in users %}
+                    '{{ user.firstName ~ ' ' ~ user.lastName }}',
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Activity Count',
+                    data: [
+                        {% for user in users %}
+                        {{ user.activityCount }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(54, 162, 235, 0.6)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
+{% endblock %}

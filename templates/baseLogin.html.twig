@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Login / Signup{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('assets/login/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+<body>
+<div class="container">
+    <input type="checkbox" id="flip">
+    <div class="cover">
+        <div class="front">
+            <img src="{{ asset('assets/login/images/posters-deux-camions-sur-l-39-autoroute-au-coucher-du-soleil.jpg') }}" alt="">
+            <div class="text">
+                <span class="text-1">Wherever you go, we’re by your side <br>  To a new adventure</span>
+                <span class="text-2">Let's get connected</span>
+            </div>
+        </div>
+        <div class="back">
+            <img class="backImg" src="{{ asset('assets/login/images/backImg.jpg') }}" alt="">
+            <div class="text">
+                <span class="text-1">Complete miles of journey <br> with one step</span>
+                <span class="text-2">Let's get started</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="forms">
+        <div class="form-content">
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

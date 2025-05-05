@@ -13,25 +13,90 @@
                 </a>
             </div>
 
-            <div class="bg-white rounded-3 shadow-sm p-4">
-                {{ form_start(form) }}
+            <div class="bg-white rounded-4 shadow-sm p-4">
+                {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
                     <div class="mb-3">
-                        {{ form_label(form.type) }}
+                        {{ form_label(form.type, 'Type de réclamation', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
                         {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
                         {{ form_errors(form.type) }}
                     </div>
+
                     <div class="mb-3">
-                        {{ form_label(form.description) }}
+                        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
                         {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 5}}) }}
                         {{ form_errors(form.description) }}
                     </div>
 
-                    <div class="text-end">
-                        <button class="btn btn-primary"><i class="fas fa-save me-1"></i> Enregistrer</button>
+                    {% if reclamation.attachment %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Fichier actuel :</label>
+                            {% set extension = reclamation.attachment|split('.')|last %}
+                            {% if extension in ['jpg', 'jpeg', 'png', 'gif', 'webp'] %}
+                                <img src="{{ asset('uploads/attachments/' ~ reclamation.attachment) }}"
+                                     alt="Pièce jointe"
+                                     class="img-fluid rounded shadow-sm"
+                                     style="max-height: 200px;">
+                            {% else %}
+                                <p><a href="{{ asset('uploads/attachments/' ~ reclamation.attachment) }}" target="_blank">
+                                    📎 Télécharger le fichier actuel
+                                </a></p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-4">
+                        {{ form_label(form.attachment, 'Nouvelle pièce jointe (facultatif)', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                        {{ form_widget(form.attachment, {'attr': {'class': 'form-control', 'onchange': 'previewAttachment(event)'}}) }}
+                        {{ form_errors(form.attachment) }}
+
+                        <div class="mt-3" id="file-preview" style="display: none;">
+                            <p class="text-muted">Aperçu du nouveau fichier :</p>
+                            <img id="preview-image" src="#" class="img-fluid rounded shadow-sm mb-2" style="max-height: 200px; display: none;" />
+                            <p id="preview-file-name" class="text-muted small"></p>
+                        </div>
                     </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary px-4">
+                            <i class="fas fa-save me-1"></i> Enregistrer
+                        </button>
+                    </div>
+
                 {{ form_end(form) }}
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function previewAttachment(event) {
+        const file = event.target.files[0];
+        const previewImage = document.getElementById('preview-image');
+        const previewFileName = document.getElementById('preview-file-name');
+        const previewContainer = document.getElementById('file-preview');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                if (file.type.startsWith('image/')) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                } else {
+                    previewImage.style.display = 'none';
+                }
+
+                previewFileName.textContent = file.name;
+                previewContainer.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.style.display = 'none';
+            previewFileName.textContent = '';
+            previewContainer.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

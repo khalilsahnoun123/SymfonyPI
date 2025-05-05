@@ -1,37 +1,50 @@
-{# templates/front/reclamation/new.html.twig #}
 {% extends 'Front/userDashboard.html.twig' %}
 
-{% block title %}New Reclamation{% endblock %}
+{% block title %}Nouvelle Réclamation{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
+<div class="container-fluid py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">New Reclamation</h1>
+        <h1 class="h3 text-primary fw-bold">Créer une Réclamation</h1>
         <a href="{{ path('user_reclamation_index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i> Back to list
+            <i class="fas fa-arrow-left me-1"></i> Retour à la liste
         </a>
     </div>
 
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            {{ form_start(form) }}
-                <div class="mb-3">
-                    {{ form_label(form.type, 'Type of Reclamation') }}
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                <div class="mb-4">
+                    {{ form_label(form.type, 'Type de Réclamation', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
                     {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
                     {{ form_errors(form.type) }}
                 </div>
-                
-                <div class="mb-3">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+
+                <div class="mb-4">
+                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Décrivez votre réclamation...'}}) }}
                     {{ form_errors(form.description) }}
                 </div>
 
-                <div class="mb-3">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-paper-plane me-1"></i> Submit
+                <div class="mb-4">
+                    {{ form_label(form.attachment, 'Pièce jointe (facultative)', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                    {{ form_widget(form.attachment, {'attr': {'class': 'form-control', 'onchange': 'previewAttachment(event)'}}) }}
+                    {{ form_errors(form.attachment) }}
+
+                    <div class="mt-3" id="file-preview" style="display: none;">
+                        <p class="text-muted">Aperçu du fichier :</p>
+                        <img id="preview-image" src="#" alt="Aperçu de l'image" class="img-fluid rounded shadow-sm mb-2" style="max-height: 200px; display: none;"/>
+                        <p id="preview-file-name" class="text-muted small"></p>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <button class="btn btn-success px-4 py-2">
+                        <i class="fas fa-paper-plane me-1"></i> Envoyer
                     </button>
                 </div>
+
             {{ form_end(form) }}
         </div>
     </div>
@@ -39,13 +52,45 @@
 
 <style>
     .form-select, .form-control {
-        border-radius: 0.4rem;
-        box-shadow: none;
+        border-radius: 0.5rem;
         border: 1px solid #ced4da;
+        transition: all 0.2s ease-in-out;
     }
+
     .form-select:focus, .form-control:focus {
         border-color: #86b7fe;
         box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
     }
 </style>
+
+<script>
+    function previewAttachment(event) {
+        const file = event.target.files[0];
+        const previewImage = document.getElementById('preview-image');
+        const previewFileName = document.getElementById('preview-file-name');
+        const previewContainer = document.getElementById('file-preview');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                if (file.type.startsWith('image/')) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                } else {
+                    previewImage.style.display = 'none';
+                }
+
+                previewFileName.textContent = file.name;
+                previewContainer.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.style.display = 'none';
+            previewFileName.textContent = '';
+            previewContainer.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

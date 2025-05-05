@@ -13,12 +13,11 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "^3.3",
         "dompdf/dompdf": "^3.1",
-       
-        "knplabs/knp-snappy-bundle": "^1.10",
         "endroid/qr-code": "^6.0",
         "endroid/qr-code-bundle": "^6.0",
         "excelwebzone/recaptcha-bundle": "*",
         "knplabs/knp-paginator-bundle": "*",
+        "knplabs/knp-snappy-bundle": "^1.10",
         "knpuniversity/oauth2-client-bundle": "*",
         "league/oauth2-google": "*",
         "phpdocumentor/reflection-docblock": "^5.6",

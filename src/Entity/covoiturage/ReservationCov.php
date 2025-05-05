@@ -28,20 +28,6 @@ class ReservationCov
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservationCovs')]
-    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id')]
-    private ?User $user = null;
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
 
     #[ORM\ManyToOne(targetEntity: Covoiturage::class, inversedBy: 'reservationCovs')]
     #[ORM\JoinColumn(name: 'id_cov', referencedColumnName: 'id')]

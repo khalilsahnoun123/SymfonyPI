@@ -113,21 +113,7 @@ class Stationvelo
         return $this;
     }
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'stationvelos')]
-    #[ORM\JoinColumn(name: 'id_admin', referencedColumnName: 'id')]
-    #[Assert\NotNull(message: "Un administrateur doit être assigné.")]
-    private ?User $user = null;
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
+   
 
     #[ORM\Column(type: 'string', nullable: false)]
     

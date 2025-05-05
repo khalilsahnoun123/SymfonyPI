@@ -1,0 +1,120 @@
+{# templates/front/cov/public_list.html.twig #}
+{% extends 'Front/userDashboard.html.twig' %}
+
+{% block title %}Covoiturages Disponibles{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: var(--dark);">Covoiturages Disponibles</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {# 👉 Barre de recherche en haut, une seule fois ! #}
+    <div class="card mb-4 p-4 shadow-sm">
+        <h4 class="mb-3">Rechercher un Covoiturage</h4>
+
+        <form id="search-form" class="row g-3">
+            <div class="col-md-5">
+                <input type="text" class="form-control" id="departure" name="point_de_depart" placeholder="Point de départ" required>
+            </div>
+            <div class="col-md-5">
+                <input type="text" class="form-control" id="destination" name="point_de_destination" placeholder="Destination" required>
+            </div>
+            <div class="col-md-2">
+                 <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+                    </button>
+            </div>
+            <div class="col-md-12 text-end">
+                <a href="{{ path('app_reservation_cov_user_list') }}" class="btn btn-secondary">Mes Réservations</a>
+            </div>
+        </form>
+    </div>
+
+    {# 👉 Résultats ici dynamiquement #}
+    <div id="carpools-list" class="row row-cols-1 row-cols-md-3 g-4">
+        {% for covoiturage in covoiturages %}
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-scale">
+                    <div class="card-header text-white" style="background-color: var(--primary);">
+                        {{ covoiturage.point_de_depart }} → {{ covoiturage.point_de_destination }}
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p class="mb-2"><strong>Places :</strong> {{ covoiturage.nbr_place }}</p>
+                        <p class="mb-4"><strong>Prix :</strong> {{ covoiturage.prix }} TND</p>
+                        {% if covoiturage.nbr_place > 0 %}
+                            <a href="{{ path('app_covoiturage_public_reserve', { id: covoiturage.id }) }}" class="btn btn-success mt-auto">
+                                Réserver
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary mt-auto" disabled>Complet</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col">
+                <div class="alert alert-info text-center">
+                    Aucun covoiturage disponible pour le moment.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# 👉 Javascript pour la recherche dynamique #}
+<script>
+    document.getElementById('search-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const departure = document.getElementById('departure').value;
+        const destination = document.getElementById('destination').value;
+
+        const response = await fetch('/api/carpools/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                point_de_depart: departure,
+                point_de_destination: destination
+            })
+        });
+
+        const data = await response.json();
+        const list = document.getElementById('carpools-list');
+        list.innerHTML = '';
+
+        if (data.carpools && data.carpools.length > 0) {
+            data.carpools.forEach(carpool => {
+                const div = document.createElement('div');
+                div.className = 'col';
+                div.innerHTML = `
+                    <div class="card h-100 shadow-sm hover-scale">
+                        <div class="card-header text-white" style="background-color: var(--primary);">
+                            ${carpool.departure} → ${carpool.destination}
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <p class="mb-2"><strong>Places :</strong> ${carpool.availableSeats}</p>
+                            <p class="mb-4"><strong>Prix :</strong> ${carpool.price} TND</p>
+                            <button class="btn btn-success mt-auto" disabled>Réserver</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        } else {
+            list.innerHTML = `
+                <div class="col">
+                    <div class="alert alert-info text-center">
+                        Aucun covoiturage trouvé.
+                    </div>
+                </div>
+            `;
+        }
+    });
+</script>
+{% endblock %}

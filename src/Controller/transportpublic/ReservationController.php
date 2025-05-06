@@ -6,7 +6,7 @@ namespace App\Controller\transportpublic;
 use Endroid\QrCode\Builder\BuilderInterface;
 
 use Endroid\QrCode\Writer\PngWriter;
-use App\Entity\transportpublic\User;
+
 use App\Entity\transportpublic\Ligne;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -131,10 +131,13 @@ public function ticket(
     #[Route('/mes-reservations', name: 'app_my_reservations', methods: ['GET'])]
     public function myreservations(ReservationRepository $reservationRepository): Response
     {
-        // always load reservations with ID = 1
-        $reservations = $reservationRepository->findBy(['user' => 1], ['travel_date' => 'DESC']);
-
-
+        /** @var User $user */
+    $user = $this->getUser();  
+    $reservations = $reservationRepository->findBy(
+        ['user' => $user],
+        ['travel_date' => 'DESC']
+    );
+      
       
 
         return $this->render('Front/Transportpublic/my_reservations.html.twig', [
@@ -168,7 +171,7 @@ public function ticket(
                      }
                      $totalPrice = $unitPrice * $reservation->getNumberOfSeats();
                      $reservation->setTotalPrice($totalPrice)
-                     ->setUser($this->getUser() ?? $em->getReference(User::class, 1));
+                     ->setUser($this->getUser()); 
                  }
              }
             $em->persist($reservation);
@@ -312,7 +315,7 @@ public function ticket(
                 ->setDepartStation($form->get('depart_station')->getData())
                 ->setFinStation($form->get('fin_station')->getData())
                 ->setStatus('PENDING')
-                ->setUser($this->getUser() ?? $em->getReference(User::class, 1)); // fallback to user #1
+                ->setUser($this->getUser()); 
 
             // pick first matching vehicle
             $veh = $vehRepo->findOneBy([

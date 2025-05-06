@@ -17,17 +17,7 @@ class SecurityController extends AbstractController
         if ($this->getUser()) {
             $roles = $this->getUser()->getRoles();
 
-            if (in_array('ROLE_COVOITUREUR', $roles, true)) {
-                return $this->redirectToRoute('backoffice_covoitureur_dashboard');
-            }
-
-            if (in_array('ROLE_CHAUFFEUR_TAXI', $roles, true)) {
-                return $this->redirectToRoute('backoffice_chauffeur_dashboard');
-            }
-
-            if (in_array('ROLE_VOYAGEUR', $roles, true)) {
-                return $this->redirectToRoute('backoffice_voyageur_dashboard');
-            }
+         
 
             // Default redirection for ROLE_USER or fallback
             return $this->redirectToRoute('app_user_index');

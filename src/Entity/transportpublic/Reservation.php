@@ -3,6 +3,7 @@
 namespace App\Entity\transportpublic;
 use App\Entity\transportpublic\Vehicules;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,10 +18,13 @@ class Reservation
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private ?int $reservation_id = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $travel_date = null;
 
     public function getReservation_id(): ?int
     {
         return $this->reservation_id;
+        
     }
 
     public function setReservation_id(int $reservation_id): self
@@ -28,14 +32,22 @@ class Reservation
         $this->reservation_id = $reservation_id;
         return $this;
     }
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservationsTB')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    private ?User $user = null;
 
-    #[ORM\Column(type: 'date', nullable: false)]
-    private ?\DateTimeInterface $travel_date = null;
-
-    public function getTravel_date(): ?\DateTimeInterface
+    public function getUser(): ?User
     {
-        return $this->travel_date;
+        return $this->user;
     }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    
 
     public function setTravel_date(\DateTimeInterface $travel_date): self
     {
